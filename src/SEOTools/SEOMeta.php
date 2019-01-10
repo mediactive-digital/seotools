@@ -85,6 +85,12 @@ class SEOMeta implements MetaTagsContract
     protected $next;
 
     /**
+     * The jsonld.
+     *
+     * @var [type]
+     */
+    protected $jsonld;
+    /**
      * The alternate languages.
      *
      * @var array
@@ -137,6 +143,7 @@ class SEOMeta implements MetaTagsContract
         $prev = $this->getPrev();
         $next = $this->getNext();
         $languages = $this->getAlternateLanguages();
+        $jsonld = $this->getJsonld();
 
         $html = [];
 
@@ -185,6 +192,12 @@ class SEOMeta implements MetaTagsContract
             $html[] = "<link rel=\"alternate\" hreflang=\"{$lang['lang']}\" href=\"{$lang['url']}\"/>";
         }
 
+
+        if (!empty( $jsonld ) && is_array( json_decode( $jsonld,true) ) ){
+            $html[] = "<script type='application/ld+json'>".$this->jsonld."</script>";
+        }
+
+        
         return ($minify) ? implode('', $html) : implode(PHP_EOL, $html);
     }
 
@@ -391,6 +404,19 @@ class SEOMeta implements MetaTagsContract
     }
 
     /**
+     * Sets the jsonld
+     *
+     * @param string $jsonld
+     *
+     * @return MetaTagsContract
+     */
+    public function setJsonld( $jsonld)
+    {
+        $this->jsonld = $jsonld;
+        return $this;
+    }
+
+    /**
      * Add an alternate language.
      *
      * @param string $lang language code in ISO 639-1 format
@@ -538,6 +564,18 @@ class SEOMeta implements MetaTagsContract
     {
         return $this->next;
     }
+
+    /**
+     * Get the jsonld
+     *
+     * @return string
+     */
+    public function getJsonld()
+    {
+        return $this->jsonld;
+    }
+
+
 
     /**
      * Get alternate languages.
